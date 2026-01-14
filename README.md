@@ -149,19 +149,48 @@ git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
 ```
 
-### Step 3: Fork the Repository
+### Step 3: Create a Bitbucket Account and Workspace
 
-Since you have **read-only access** to this repository, one member in each group must create your own copy (fork) and ask the other group members to fork it:
+**You need BOTH a Bitbucket account AND a workspace to fork repositories.**
 
-1. Log in to your Atlassian account, then go to [this repository on Bitbucket](https://bitbucket.org/nordlinglab/nordlinglab-course-agenticai-ecg-hrv/)
-2. Click the **"..."** button in the upper right corner
-3. Select **"Fork this repository"**
-4. Give your fork a name (e.g., `agenticai-submissions-yourname`), don't check `Private repository` since then your group member cannot read it unless you give them permission
-5. Click **"Fork repository"**
+#### If you don't have a Bitbucket account:
 
-You now have your own copy where you can make changes.
+1. Go to https://bitbucket.org/account/signup/
+2. Sign up with your email (you can use your university email)
+3. **Important:** When prompted, create a **personal workspace** - this is where your fork will live
 
-### Step 4: Clone Your Fork
+### Step 4: Fork the Repository to Your Own Workspace
+
+Since you have **read-only access** to the original repository, you must create your own copy (fork) in **your personal workspace**:
+
+1. Log in to [Bitbucket](https://bitbucket.org/)
+2. Go to [this repository](https://bitbucket.org/nordlinglab/nordlinglab-course-agenticai-ecg-hrv/)
+3. Click the **"..."** button (three dots) in the upper right corner
+4. Select **"Fork this repository"**
+5. **IMPORTANT - Configure the fork:**
+   - **Workspace:** Select **YOUR personal workspace** (not `nordlinglab` - you don't have write access there)
+   - **Project:** Select or create a project in your workspace (e.g., "My Projects")
+   - **Repository name:** Give it a name (e.g., `agenticai-ecg-hrv-submissions`)
+   - **Access level:** Leave unchecked (public) so group members can access it, OR check "Private" and manually invite group members
+6. Click **"Fork repository"**
+
+You now have your own copy at `https://bitbucket.org/YOUR_USERNAME/YOUR_FORK_NAME/` where you can make changes.
+
+**Common Error A:** If you see "Access denied" or "You don't have permission", you likely tried to fork into the `nordlinglab` workspace. Go back and select YOUR OWN workspace in the Workspace dropdown.
+
+**Common Error B:** If you have an account but NO workspace appears in the fork dialog:
+
+This happens when you signed up via Atlassian/Google SSO without creating a Bitbucket workspace. You must create one:
+
+1. Go to https://bitbucket.org/account/workspaces/
+2. Click **"Create workspace"**
+3. Enter a **Workspace name** (e.g., your username or name)
+4. The **Workspace ID** will be auto-generated (this becomes part of your repository URLs)
+5. Click **"Create"**
+
+After creating a workspace, go back to the repository and try forking again - your new workspace should now appear in the dropdown.
+
+### Step 5: Clone Your Fork
 
 ```bash
 # Navigate to where you want to store the project
@@ -182,7 +211,7 @@ If you already cloned without `--recursive`, initialize submodules with:
 git submodule update --init --recursive
 ```
 
-### Step 5: Create Your Submission
+### Step 6: Create Your Submission
 
 1. Navigate to the appropriate folder
 2. Create your file following the naming convention
@@ -196,7 +225,7 @@ cd case-brief-individual
 # File must be named: YYYY-YourFamilyName-YourFirstName.md
 ```
 
-### Step 6: Stage and Commit Your Changes
+### Step 7: Stage and Commit Your Changes
 
 ```bash
 # Check what files have changed
@@ -209,13 +238,13 @@ git add case-brief-individual/YYYY-YourFamilyName-YourFirstName.md
 git commit -m "Add case brief for YourName"
 ```
 
-### Step 7: Push to Your Fork
+### Step 8: Push to Your Fork
 
 ```bash
 git push origin main
 ```
 
-### Step 8: Create a Pull Request
+### Step 9: Create a Pull Request
 
 1. Go to **your fork** on Bitbucket
 2. Click **"Create pull request"** (or find it under the "+" menu)
@@ -270,9 +299,40 @@ git push origin main
 
 ## Troubleshooting
 
+### "Access denied" when forking
+
+**Problem:** You see "Access denied" or "You don't have permission to create a repository in this workspace" when trying to fork.
+
+**Solution:** You're trying to fork into the `nordlinglab` workspace, which you don't have write access to. When forking:
+1. Look for the **"Workspace"** dropdown in the fork dialog
+2. Change it from `nordlinglab` to **your personal workspace** (your username)
+
+### No workspace available in fork dialog
+
+**Problem:** The Workspace dropdown is empty or only shows `nordlinglab` (which you can't use).
+
+**Cause:** You signed up for Bitbucket via Atlassian ID or Google SSO, but never created a personal workspace. Bitbucket accounts created this way don't automatically get a workspace.
+
+**Solution:** Create a workspace first:
+1. Go to https://bitbucket.org/account/workspaces/
+2. Click **"Create workspace"**
+3. Enter a name (e.g., your username)
+4. Click **"Create"**
+5. Return to the repository and try forking again
+
 ### "Permission denied" when pushing
 
-You're trying to push to the original repository instead of your fork. Make sure you cloned your fork, not the original.
+You're trying to push to the original repository instead of your fork. Check your remote URL:
+
+```bash
+git remote -v
+```
+
+If it shows `nordlinglab` in the URL, you cloned the original instead of your fork. Fix it:
+
+```bash
+git remote set-url origin git@bitbucket.org:YOUR_USERNAME/YOUR_FORK_NAME.git
+```
 
 ### Merge conflicts
 
