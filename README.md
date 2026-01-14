@@ -9,6 +9,7 @@ This repository contains all student submissions for the **Agentic AI** course (
 ### License Requirements
 
 All submitted material **must** be licensed under one of the following:
+
 - **Apache License 2.0** (for code)
 - **CC-BY-4.0** (Creative Commons Attribution 4.0, for documentation and data)
 
@@ -157,7 +158,7 @@ git config --global user.email "your.email@example.com"
 
 1. Go to https://bitbucket.org/account/signup/
 2. Sign up with your email (you can use your university email)
-3. **Important:** When prompted, create a **personal workspace** - this is where your fork will live
+3. **Important:** When prompted, create a **personal workspace** and give it a unique easy to remember name - this is where your fork will live. Other people find your forked repository in `https://bitbucket.org/THEWORKSPACENAMEYOUPICKED`
 
 ### Step 4: Fork the Repository to Your Own Workspace
 
@@ -168,13 +169,15 @@ Since you have **read-only access** to the original repository, you must create 
 3. Click the **"..."** button (three dots) in the upper right corner
 4. Select **"Fork this repository"**
 5. **IMPORTANT - Configure the fork:**
-   - **Workspace:** Select **YOUR personal workspace** (not `nordlinglab` - you don't have write access there)
+
+   - **Workspace:** Select **THEWORKSPACENAMEYOUPICKED** (not `nordlinglab` - you don't have write access there)
    - **Project:** Select or create a project in your workspace (e.g., "My Projects")
    - **Repository name:** Give it a name (e.g., `agenticai-ecg-hrv-submissions`)
-   - **Access level:** Leave unchecked (public) so group members can access it, OR check "Private" and manually invite group members
+   - **Access level:** Leave unchecked (public) so group members can access it, OR check "Private" and manually invite group members to the workspace
+
 6. Click **"Fork repository"**
 
-You now have your own copy at `https://bitbucket.org/YOUR_USERNAME/YOUR_FORK_NAME/` where you can make changes.
+You now have your own copy at `https://bitbucket.org/THEWORKSPACENAMEYOUPICKED/YOUR_FORK_NAME/` where you can make changes.
 
 **Common Error A:** If you see "Access denied" or "You don't have permission", you likely tried to fork into the `nordlinglab` workspace. Go back and select YOUR OWN workspace in the Workspace dropdown.
 
@@ -184,7 +187,7 @@ This happens when you signed up via Atlassian/Google SSO without creating a Bitb
 
 1. Go to https://bitbucket.org/account/workspaces/
 2. Click **"Create workspace"**
-3. Enter a **Workspace name** (e.g., your username or name)
+3. Enter a **Workspace name** (e.g., your username, name, or nickname)
 4. The **Workspace ID** will be auto-generated (this becomes part of your repository URLs)
 5. Click **"Create"**
 
@@ -197,7 +200,7 @@ After creating a workspace, go back to the repository and try forking again - yo
 cd ~/Documents
 
 # Clone YOUR fork with submodules (not the original repository)
-git clone --recursive git@bitbucket.org:YOUR_USERNAME/YOUR_FORK_NAME.git
+git clone --recursive git@bitbucket.org:THEWORKSPACENAMEYOUPICKED/YOUR_FORK_NAME.git
 
 # Enter the project directory
 cd YOUR_FORK_NAME
@@ -215,7 +218,7 @@ git submodule update --init --recursive
 
 1. Navigate to the appropriate folder
 2. Create your file following the naming convention
-3. Add required content (see folder README for requirements)
+3. Add required content (see folder [README](./case-brief-individual/README.md) for requirements)
 
 Example for case brief:
 ```bash
@@ -247,15 +250,17 @@ git push origin main
 ### Step 9: Create a Pull Request
 
 1. Go to **your fork** on Bitbucket
-2. Click **"Create pull request"** (or find it under the "+" menu)
+2. Click **"Create pull request"** (or find it under the **"..."** button (three dots) in the upper right corner)
 3. Set:
+
    - **Source:** your fork's `main` branch
    - **Destination:** the original repository's `main` branch
+
 4. Add a title: `Submission: YYYY-YourFamilyName-YourFirstName - [type]`
 5. Add description of what you're submitting
 6. Click **"Create pull request"**
 
-The TA will review your submission and merge it if it meets the requirements.
+The TA or group member whose repository you forked will review your submission and merge it if it meets the requirements.
 
 ---
 
@@ -281,6 +286,8 @@ If the original repository is updated, sync your fork:
 ```bash
 # Add the original repo as "upstream" (do this once)
 git remote add upstream git@bitbucket.org:nordlinglab/nordlinglab-course-agenticai-ecg-hrv.git
+# or if you forked a group members repository
+git remote add upstream git@bitbucket.org:THEWORKSPACENAMEYOURGROUPMEMBERPICKED/YOUR_GROUP_MEMBERS_FORK_NAME.git
 
 # Fetch updates from original (including submodules)
 git fetch upstream
@@ -316,7 +323,7 @@ git push origin main
 **Solution:** Create a workspace first:
 1. Go to https://bitbucket.org/account/workspaces/
 2. Click **"Create workspace"**
-3. Enter a name (e.g., your username)
+3. Enter a name (e.g., your username, name, or nickname)
 4. Click **"Create"**
 5. Return to the repository and try forking again
 
@@ -331,7 +338,7 @@ git remote -v
 If it shows `nordlinglab` in the URL, you cloned the original instead of your fork. Fix it:
 
 ```bash
-git remote set-url origin git@bitbucket.org:YOUR_USERNAME/YOUR_FORK_NAME.git
+git remote set-url origin git@bitbucket.org:THEWORKSPACENAMEYOUPICKED/YOUR_FORK_NAME.git
 ```
 
 ### Merge conflicts
