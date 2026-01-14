@@ -43,13 +43,13 @@ student-material-ecg-hrv/
 ├── reflection-group/              # Group reflection documents (Markdown)
 ├── report-individual/             # Individual technical reports (Markdown)
 │
-├── data-group/                    # Group data submissions
+├── data-group/                    # Group data submissions (folder per group)
 │   └── 2026-Chen-Lin-Wang-data/   # Example: git submodule
 │
-├── project-code-group/            # Group project code
+├── project-code-group/            # Group project code (folder per group)
 │   └── 2026-Chen-Lin-Wang-code/   # Example: git submodule
 │
-├── tests-group/                   # Group test cases and results (folder per group)
+├── tests-group/                   # Group test cases and results document (Markdown)
 │
 ├── slides-demonstration-group/    # Group presentation slides (Beamer .tex)
 └── system-design-group/           # Group system design diagrams (draw.io .drawio)
@@ -97,7 +97,7 @@ Format: `YYYY-FamilyName1-FamilyName2-FamilyName3/` (folder) or `YYYY-FamilyName
 List all group members' family names in alphabetical order.
 
 Examples:
-- `2026-Chen-Lin-Wang/` (folder for group submissions)
+- `2026-Chen-Lin-Wang-code` (folder for group code submissions)
 - `2026-Chen-Lin-Wang.tex` (Beamer slides)
 - `2026-Chen-Lin-Wang.drawio` (system design)
 
@@ -112,7 +112,7 @@ Examples:
 | Technical Report (Individual) | Markdown `.md` | `report-individual/` |
 | Data (Group) | Folder with data files incl. `README.md` | `data-group/` |
 | Project Code (Group) | Folder with code incl. `README.md` | `project-code-group/` |
-| Test Cases (Group) | Folder with test files incl. `README.md` | `tests-group/` |
+| Test Cases (Group) | Markdown `.md` with reference to `tests/` in project code | `tests-group/` |
 | Presentation Slides (Group) | Beamer `.tex` (NordlingLab 16:9 template) | `slides-demonstration-group/` |
 | System Design (Group) | draw.io `.drawio` XML (UML standard) | `system-design-group/` |
 
