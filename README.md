@@ -42,12 +42,34 @@ student-material-ecg-hrv/
 ├── reflection-group/              # Group reflection documents (Markdown)
 ├── report-individual/             # Individual technical reports (Markdown)
 │
-├── data-group/                    # Group data submissions (folder per group)
-├── project-code-group/            # Group project code (folder per group)
+├── data-group/                    # Group data submissions
+│   └── 2026-Chen-Lin-Wang-data/   # Example: git submodule
+│
+├── project-code-group/            # Group project code
+│   └── 2026-Chen-Lin-Wang-code/   # Example: git submodule
+│
 ├── tests-group/                   # Group test cases and results (folder per group)
 │
 ├── slides-demonstration-group/    # Group presentation slides (Beamer .tex)
 └── system-design-group/           # Group system design diagrams (draw.io .drawio)
+```
+
+### Example Submodules
+
+The example data and code repositories are included as git submodules:
+
+| Submodule | Repository |
+|-----------|------------|
+| `data-group/2026-Chen-Lin-Wang-data` | `git@bitbucket.org:nordlinglab/nordlinglab-course-agenticai-ecg-hrv-example-data.git` |
+| `project-code-group/2026-Chen-Lin-Wang-code` | `git@bitbucket.org:nordlinglab/nordlinglab-course-agenticai-ecg-hrv-example-code.git` |
+
+**For maintainers:** To set up these submodules, run from the main course repository:
+```bash
+# From nordlinglab-course-agenticai/ directory
+chmod +x src/setup_example_submodules.sh
+./src/setup_example_submodules.sh --help    # See all options
+./src/setup_example_submodules.sh           # Use defaults
+./src/setup_example_submodules.sh --register  # Initialize, push, and register
 ```
 
 ---
@@ -145,11 +167,19 @@ You now have your own copy where you can make changes.
 # Navigate to where you want to store the project
 cd ~/Documents
 
-# Clone YOUR fork (not the original repository)
-git clone git@bitbucket.org:YOUR_USERNAME/YOUR_FORK_NAME.git
+# Clone YOUR fork with submodules (not the original repository)
+git clone --recursive git@bitbucket.org:YOUR_USERNAME/YOUR_FORK_NAME.git
 
 # Enter the project directory
 cd YOUR_FORK_NAME
+```
+
+**Note:** The `--recursive` flag initializes all git submodules (example data and code repositories).
+
+If you already cloned without `--recursive`, initialize submodules with:
+
+```bash
+git submodule update --init --recursive
 ```
 
 ### Step 5: Create Your Submission
@@ -223,11 +253,14 @@ If the original repository is updated, sync your fork:
 # Add the original repo as "upstream" (do this once)
 git remote add upstream git@bitbucket.org:nordlinglab/nordlinglab-course-agenticai-ecg-hrv.git
 
-# Fetch updates from original
+# Fetch updates from original (including submodules)
 git fetch upstream
 
 # Merge updates into your branch
 git merge upstream/main
+
+# Update submodules to latest
+git submodule update --init --recursive
 
 # Push updates to your fork
 git push origin main
