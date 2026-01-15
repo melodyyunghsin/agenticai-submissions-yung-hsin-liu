@@ -5,7 +5,7 @@ This folder contains group system design diagrams following UML standards.
 ## Requirements
 
 ### File Format
-- **Format:** draw.io XML (`.drawio`) and exported PDF (.pdf)
+- **Format:** draw.io XML (`.drawio`) and exported PDF (`.pdf`)
 - **Naming:** `YYYY-FamilyName1-FamilyName2-FamilyName3.drawio` (alphabetical order, ASCII only)
 - **Standard:** UML (Unified Modeling Language)
 - **License:** Include license in diagram metadata or as text element (CC-BY-4.0 recommended)
@@ -41,32 +41,76 @@ Deliverable scored as passed (1) if handed in with acceptable quality before the
 
 ---
 
-## UML Notation
+## What is UML?
 
-Add link to latest reference document.
+**UML (Unified Modeling Language)** is a standardized visual modeling language for software engineering. It provides a common vocabulary and notation for designing and documenting software systems.
 
-### Component Diagram Elements
+### Why Use UML?
+
+| Benefit | Description |
+|---------|-------------|
+| **Standardization** | Universal notation understood across the industry |
+| **Communication** | Clear visual language for discussing architecture with team members, stakeholders, and future maintainers |
+| **Documentation** | Self-documenting diagrams that remain useful long after code is written |
+| **Design Clarity** | Forces you to think through system structure before implementation |
+| **Tool Support** | Wide ecosystem of tools (draw.io, Lucidchart, PlantUML, etc.) |
+
+### UML in AI/Agent Systems
+
+For AI agent architectures, UML helps visualize:
+- **Agent boundaries** - What is the agent vs. external systems
+- **Tool orchestration** - How the orchestrator coordinates tools
+- **Data flow** - How information moves through the pipeline
+- **Interface contracts** - What each component expects and provides
+
+---
+
+## UML Reference
+
+**Official Specification:** [OMG UML 2.5.1](https://www.omg.org/spec/UML/2.5.1/) (December 2017)
+
+**Quick References:**
+- [UML Diagrams Overview](https://www.uml-diagrams.org/) - Comprehensive guide with examples
+- [PlantUML Reference](https://plantuml.com/) - Text-based UML (alternative to draw.io)
+- [UML Cheat Sheet (PDF)](https://loufranco.com/wp-content/uploads/2012/11/cheatsheet.pdf) - Quick reference card
+
+---
+
+
+### Component Diagram Elements (UML 2.5.1)
 
 ```
-┌─────────────────┐
-│  <<component>>  │     Component (with stereotype)
-│   ComponentName │
-└─────────────────┘
+┌───────────────────────────┐
+│                    ┌───┐  │  Component with compartments
+│                  ┌─┴─┐ │  │  (icon in upper-right corner)
+│  ComponentName   └─┬─┘ │  │
+│                  ┌─┴─┐ │  │
+│                  └─┬─┘ │  │
+│                    └───┘  │
+├───────────────────────────┤
+│ provided interfaces       │
+│   Interface1              │
+├───────────────────────────┤
+│ required interfaces       │
+│   Interface2              │
+└───────────────────────────┘
 
-┌─────────────────┐
-│ ComponentName   │     Component (simple)
-└─────────────────┘
-
-    ○──────────────     Provided interface (lollipop)
-
-    ○──┐
-       │                Required interface (socket)
-    ───┘
-
-─────────────────►      Dependency arrow
-
-════════════════►      Data flow (thick arrow)
+    ┌───┐
+  ┌─┴─┐ │      Component icon (UML 2.5.1)
+  └─┬─┘ │      Two rectangles protruding
+  ┌─┴─┐ │      from left side
+  └─┬─┘ │
+    └───┘
 ```
+
+### Notation Guidelines
+
+| Element | Symbol | When to Use |
+|---------|--------|-------------|
+| **Component** | Rectangle + «component» or icon | Always - represents a modular unit |
+| **Activity** | Solid arrow (───►) | Activity showing information flow direction |
+
+Note: Connectors should be used in a component diagram, but they are too challenging to make using pure text. To keep a simple conceptual illustration this deviation from the specification in UML 2.5.1 is done.
 
 ### Common Stereotypes for AI Agents
 
@@ -86,41 +130,47 @@ Add link to latest reference document.
 ### Component Diagram for HRV Analysis Agent
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                         HRV Analysis Agent System                         │
-├──────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│  ┌──────────────┐      ┌──────────────┐      ┌──────────────┐            │
-│  │ <<agent>>    │      │ <<tool>>     │      │ <<tool>>     │            │
-│  │              │─────▶│              │─────▶│              │            │
-│  │ Orchestrator │      │ ECG Loader   │      │ Signal       │            │
-│  │              │      │              │      │ Processor    │            │
-│  └──────┬───────┘      └──────────────┘      └──────┬───────┘            │
-│         │                                           │                     │
-│         │                                           ▼                     │
-│         │              ┌──────────────┐      ┌──────────────┐            │
-│         │              │ <<model>>    │      │ <<tool>>     │            │
-│         │              │              │◀─────│              │            │
-│         │              │ Classifier   │      │ Feature      │            │
-│         │              │              │      │ Extractor    │            │
-│         │              └──────┬───────┘      └──────┬───────┘            │
-│         │                     │                     │                     │
-│         │                     │    ┌────────────────┘                     │
-│         │                     │    │  (features + prediction)             │
-│         │                     ▼    ▼                                      │
-│         │              ┌──────────────┐      ┌──────────────┐            │
-│         │              │ <<tool>>     │      │ <<artifact>> │            │
-│         └─────────────▶│              │─────▶│              │            │
-│                        │ Report       │      │ PDF Report   │            │
-│                        │ Generator    │      │              │            │
-│                        └──────────────┘      └──────────────┘            │
-│                                                                           │
-└──────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────┐
+│  «component»                                                          ┌───┐    │
+│                                                                     ┌─┴─┐ │    │
+│                                           HRV Analysis Agent        └─┬─┘ │    │
+│                                                                     ┌─┴─┐ │    │
+│                                                                     └─┬─┘ │    │
+│                                                                       └───┘    │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  ┌──────────────┐        ┌──────────────┐        ┌──────────────┐             │
+│  │ «agent»      │        │ «tool»       │        │ «tool»       │             │
+│  │              │───────>│              │───────>│              │             │
+│  │ Orchestrator │        │ ECG Loader   │        │ Signal       │             │
+│  │              │        │              │        │ Processor    │             │
+│  └──────┬───────┘        └──────────────┘        └──────┬───────┘             │
+│         │                                               │                      │
+│         │                                               ▼                      │
+│         │                ┌──────────────┐        ┌──────────────┐             │
+│         │                │ «model»      │        │ «tool»       │             │
+│         │                │              │<───────│              │             │
+│         │                │ Classifier   │        │ Feature      │             │
+│         │                │              │        │ Extractor    │             │
+│         │                └──────┬───────┘        └──────┬───────┘             │
+│         │                       │                       │                      │
+│         │                       │       ┌───────────────┘                      │
+│         │                       │       │                                      │
+│         │                       ▼       ▼                                      │
+│         │                ┌──────────────┐        ┌──────────────┐             │
+│         │                │ «tool»       │        │ «artifact»   │             │
+│         └───────────────>│              │───────>│              │             │
+│                          │ Report       │        │ PDF Report   │             │
+│                          │ Generator    │        │              │             │
+│                          └──────────────┘        └──────────────┘             │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
 
 External:
 ┌──────────────┐
-│ <<database>> │
-│ File System  │  ECG Data Files (.txt)
+│ «database»   │
+│              │  ECG Data Files (.txt)
+│ File System  │
 └──────────────┘
 ```
 
@@ -219,3 +269,4 @@ Before submitting, verify:
 - [ ] Fits on approximately 1 A4 page
 - [ ] No personally identifiable information (PII)
 - [ ] All group members listed
+- [ ] Verified to follow UML 2.5.1 by LLM
