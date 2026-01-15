@@ -1,54 +1,114 @@
-### **1\. Problem Definition**
+# Case Brief: Agentic ECG-Based Stress & Recovery Awareness System
 
-**Author:** 2026-Chen Guo-Zhu
+**Author:** 2026-Chen-GuoZhu  
 **License:** CC-BY-4.0
-While wearable devices increasingly collect ECG signals, most users lack the ability to interpret ECG waveforms and rhythm-related changes. Situations such as irregular rhythms, unusually fast or slow heart rates, or potentially dangerous waveform patterns often cause confusion or anxiety, as users are presented only with numerical heart rate values without meaningful context.
 
-Importantly, many rhythm variations are not pathological but are strongly associated with stress, fatigue, emotional states, and autonomic nervous system activity. Without waveform-level interpretation (P wave, QRS complex, T wave) and personalized baselines, users cannot determine whether an observed change is benign or requires attention.
+---
 
-This project focuses on non-diagnostic detection and awareness of the following ECG rhythm-related patterns:  
-\- Irregular rhythm patterns  
-\- Sinus tachycardia  
-\- Sinus bradycardia  
-\- Fast rhythm patterns  
-\- Potentially critical waveform patterns
+## 1. Problem Statement
 
-The system does not provide medical diagnoses, but instead emphasizes early awareness, risk flagging, and behavioral guidance.
+While wearable devices increasingly collect ECG signals, most users lack the
+ability to interpret ECG waveforms and rhythm-related changes. Situations such
+as irregular rhythms, unusually fast or slow heart rates, or potentially
+dangerous waveform patterns often cause confusion or anxiety, as users are
+presented only with numerical heart rate values without meaningful context.
 
-\---
+Importantly, many rhythm variations are not pathological but are strongly
+associated with stress, fatigue, emotional states, and autonomic nervous system
+activity. Without waveform-level interpretation (P wave, QRS complex, T wave)
+and personalized baselines, users cannot determine whether an observed change
+is benign or requires attention.
 
-### **2\. Proposed Solution**
+This project focuses on **non-diagnostic detection and awareness** of ECG
+rhythm-related patterns, rather than medical diagnosis.
 
-The proposed system incorporates ECG waveform analysis and agentic decision-making to convert complex ECG signals into actionable and user-friendly feedback.
+---
 
-Automated ECG Waveform Annotation  
-The system automatically identifies and annotates:  
-\- P wave (atrial depolarization)  
-\- QRS complex (ventricular depolarization)  
-\- T wave (ventricular repolarization)
+## 2. Context and Background
 
-These annotations serve as the foundation for rhythm monitoring and anomaly detection.
+### Industry Context
 
-Rhythm Monitoring Applications
+Wearable ECG-enabled devices are widely adopted, yet most consumer-facing
+applications reduce rich waveform data into simplified heart rate metrics.
+This abstraction limits users’ ability to understand physiological changes
+related to stress, recovery, and fatigue.
 
-\*\*Irregular Rhythm\*\*  
-\- Detects unstable RR intervals across consecutive beats.  
-\- Filters low-quality signals to reduce false alerts.  
-\- Provides non-diagnostic notifications when persistent irregularity is detected.
+### Stakeholders
 
-\*\*Sinus Tachycardia\*\*  
-\- Confirms normal P–QRS–T sequence with elevated heart rate relative to personalized baseline.  
-\- Interprets patterns commonly associated with stress or physical activity.
+-   Individual wearable users concerned about health and stress
+-   Developers of health-monitoring applications
+-   Organizations promoting preventive and self-awareness tools
 
-\*\*Sinus Bradycardia\*\*  
-\- Identifies stable P–QRS–T morphology with heart rate below personalized baseline.  
-\- Considers context such as rest or sleep state.
+### Current Limitations
 
-\*\*Fast Rhythm Patterns\*\*  
-\- Detects sustained high heart rate episodes.  
-\- Evaluates rhythm regularity and QRS morphology without labeling disease categories.
+-   Limited waveform-level explanation
+-   Over-reliance on numerical heart rate
+-   Lack of personalized, context-aware interpretation
 
-\*\*Critical Waveform Flags\*\*  
-\- Identifies highly abnormal or chaotic waveform patterns (e.g., inability to reliably detect QRS complexes or extremely rapid wide-complex patterns).  
-\- Triggers high-priority safety alerts encouraging immediate rest or professional assistance, without issuing a diagnosis.
+---
 
+## 3. Analysis
+
+### Root Causes
+
+1. ECG waveform data is complex and difficult for non-experts to interpret
+2. Existing tools lack adaptive reasoning based on personal baselines
+3. Most systems either oversimplify or attempt clinical diagnosis
+
+### Constraints
+
+-   Must not provide medical diagnosis
+-   Must handle noisy or low-quality ECG signals safely
+-   Must present explanations in an understandable manner
+
+### Requirements
+
+-   Waveform-level analysis (P, QRS, T)
+-   Personalized baseline comparison
+-   Clear, non-alarming user feedback
+
+---
+
+## 4. Proposed Approach
+
+### 4.1 Chat-Based AI Approach
+
+A chat-based system allows users to interactively explore their ECG data:
+
+1. Users upload or paste ECG waveform data
+2. The system annotates waveform features
+3. The chat interface explains rhythm changes in natural language
+4. Users can ask follow-up questions for clarification
+
+This approach emphasizes **interpretability and user education**.
+
+---
+
+### 4.2 Agentic AI Approach
+
+An agentic system extends the chat-based approach by operating autonomously:
+
+1. Continuously monitors ECG streams
+2. Detects rhythm changes and stress-related patterns
+3. Tracks personal baselines over time
+4. Proactively flags unusual or high-risk patterns
+5. Provides context-aware guidance (rest, hydration, reduced activity)
+
+The agent acts as a **non-diagnostic awareness assistant**, not a clinician.
+
+---
+
+## 5. Expected Outcomes
+
+-   Improved user understanding of ECG waveform changes
+-   Early awareness of stress- and fatigue-related patterns
+-   Reduced anxiety through contextual explanation
+-   Better alignment between physiological signals and daily behavior
+
+---
+
+## 6. References
+
+1. Clifford GD, et al. Advanced methods and tools for ECG data analysis.
+2. Shaffer F, Ginsberg JP. An overview of heart rate variability metrics.
+3. WHO. Digital health interventions: classification and application.
