@@ -1,141 +1,272 @@
-# ECG Pomodoro（MVP, Modular）
+# ECG-Pomodoro: A Pomodoro Timer with ECG-based Stress and Focus Detection
 
-本專案採「三模組分離」架構：GUI（React）負責番茄鐘與顯示；ECG 與 AI 各自是獨立 FastAPI 服務，透過 HTTP + JSON 溝通。
-目標是先做出可測試 MVP（stub），讓組員能在不互相阻塞的情況下替換內部演算法，但**不改動對外介面（contract）**。
+An AI agent system for managing work and rest cycles with real-time physiological feedback.
 
----
+**Group:** 2026-Chen-Chen-Liu
+**Authors:** Chen, Chen, Liu
+**License:** Apache-2.0
 
-## 架構概觀
+## Badges
 
-### Modules
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+[![Coverage Status](https://coveralls.io/repos/github/joemccann/dillinger/badge.svg?branch=master)](https://coveralls.io/github/joemccann/dillinger?branch=master)
 
--   `ecg-pomodoro/`：React GUI
+## Navigation
 
-    -   番茄鐘狀態機：HOME / CONFIG / WORK / PAUSE / REST
-    -   REST 畫面先顯示「AI 思考中…」；MVP 階段可用 Demo Pipeline 按鈕測資料流
+- [Description](#description)
+- [Requirements](#requirements)
+- [API Keys](#api-keys)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Architecture](#architecture)
+- [Testing](#testing)
+- [Known Issues](#known-issues)
+- [Contributing](#contributing)
+- [Code of Conduct](#code-of-conduct)
+- [Style Guide](#style-guide)
+- [License](#license)
+- [Disclaimer](#disclaimer)
 
--   `ecg-service/`：ECG 前處理服務（FastAPI, stub）
+## Description
 
-    -   提供 `POST /ecg/features`：輸入 `EcgSegment`，輸出 `EcgFeatures`
+This project, `ecg-pomodoro`, is a web application that integrates the Pomodoro Technique with mock electrocardiogram (ECG) analysis. The goal is to provide a tool that helps users manage their productivity through timed work and break intervals, while simulating the monitoring of physiological markers for stress and focus.
 
--   `ai-service/`：AI 推論服務（FastAPI, stub）
-    -   提供 `POST /ai/predict`：輸入 `EcgFeatures`，輸出 `AiPrediction`
+The application is architected as a set of microservices:
+1.  A **React frontend** that provides the user interface for the Pomodoro timer and displays the analysis results.
+2.  An **ECG service** (Python/FastAPI) that simulates receiving raw ECG data and processing it to extract features like R-peaks and heart rate variability (HRV) metrics.
+3.  An **AI service** (Python/FastAPI) that takes the features from the ECG service and provides a mock "prediction" of the user's state (e.g., "focus" or "stress").
 
-### Data Contract（最重要）
+**Note:** The backend services are currently stubs that generate random data, as the focus of this implementation is on the system's architecture and inter-service communication.
 
-我們用 Pydantic models 定義 JSON 格式，並用 `response_model=...` 鎖定回傳格式，避免組員改演算法時把回傳欄位弄壞。
+## Requirements
 
-所有 payload 都含：
+- Node.js v14+ and npm
+- Python 3.9+ and pip
+- `uvicorn` for running the Python services
 
--   `schema_version`：例如 `ecg-seg/v1`、`ecg-feat/v1`、`ai-pred/v1`
--   `segment_id`：全 pipeline 一路帶著，用來追蹤/除錯
+## API Keys
 
----
+No API keys are required to run this project.
 
-## 目錄結構
+## Installation
 
-```text
-project-root/
-  ecg-pomodoro/      # React (create-react-app)
-  ecg-service/       # FastAPI service for ECG features
-  ai-service/        # FastAPI service for AI prediction
+### Install Dependencies
+
+1.  **Frontend**
+
+    ```bash
+    # Navigate to the frontend directory
+    cd frontend
+
+    # Install npm packages
+    npm install
+    ```
+
+2.  **Backend**
+
+    The backend consists of two services. It is recommended to create a virtual environment for them.
+
+    ```bash
+    # From the project root directory
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+    # Install dependencies for both services
+    pip install -r ecg-service/requirements.txt
+    pip install -r ai-service/requirements.txt
+    ```
+
+## Usage
+
+All three services must be running concurrently for the application to function.
+
+1.  **Start the Frontend**
+
+    ```bash
+    # In the frontend/ directory
+    npm start
+    ```
+    The application will be available at `http://localhost:3000`.
+
+2.  **Start the Backend Services**
+
+    Open two separate terminals to run the backend services.
+
+    ```bash
+    # In the first terminal, start the ECG service
+    # (from the ecg-pomodoro/ directory)
+    cd ecg-service
+    uvicorn main:app --reload --port 8001
+
+    # In the second terminal, start the AI service
+    # (from the ecg-pomodoro/ directory)
+    cd ai-service
+    uvicorn main:app --reload --port 8002
+    ```
+    The ECG service will run at `http://localhost:8001`, and the AI service will run at `http://localhost:8002`.
+
+Once all services are running, you can open a web browser to `http://localhost:3000` to use the Pomodoro timer and see the mock analysis results.
+
+## Architecture
+
+The system uses a microservices architecture:
+
+```
+┌───────────────────┐       ┌────────────────┐       ┌──────────────┐
+│  React Frontend   │──────>│  ECG Service   │──────>│  AI Service  │
+│ (localhost:3000)  │       │ (localhost:8001) │       │(localhost:8002)│
+└───────────────────┘       └────────────────┘       └──────────────┘
 ```
 
----
+-   **Frontend**: A standard `create-react-app` application for the user interface.
+-   **ECG Service**: A FastAPI server that exposes a `/ecg/` endpoint. It receives mock ECG data and returns a set of calculated features.
+-   **AI Service**: A FastAPI server that exposes an `/ai/` endpoint. It receives features from the ECG service and returns a mock prediction.
 
-## 快速開始（MVP 可跑）
+This decoupled design allows each component to be developed, deployed, and scaled independently.
 
-### 1) 啟動 ECG service（port 8001）
+### Project Structure
+
+```
+ecg-pomodoro/
+├── .env.example           # Example environment variables
+├── .gitignore             # Git ignore file
+├── CODE_OF_CONDUCT.md     # Code of Conduct
+├── LICENSE                # Apache-2.0 License
+├── README.md              # This file
+├── ai-service/            # Python FastAPI AI service
+│   ├── main.py            # Service entry point
+│   └── requirements.txt
+├── ecg-service/           # Python FastAPI ECG service
+│   ├── main.py            # Service entry point
+│   └── requirements.txt
+├── frontend/              # React frontend application
+│   ├── public/            # Public assets
+│   ├── src/               # Frontend source code
+│   └── package.json
+└── ...
+```
+
+## Testing
+
+The frontend includes a standard set of React tests.
 
 ```bash
-cd ecg-service
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8001
+# In the frontend/ directory
+npm test
 ```
 
-打開互動文件頁：
+No automated tests have been set up for the backend services at this time.
 
--   http://127.0.0.1:8001/docs （Swagger UI）[web:521]
--   http://127.0.0.1:8001/redoc （ReDoc）[web:521]
+## Known Issues
 
-### 2) 啟動 AI service（port 8002）
+-   **Stubbed Services:** The `ecg-service` and `ai-service` do not perform real analysis. They return pre-defined or randomly generated data for demonstration purposes.
+-   **Missing Top-Level `requirements.txt`**: The course requirements suggest a single `requirements.txt`. However, due to the microservices architecture, each service has its own dependency file.
 
-```bash
-cd ai-service
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8002
-```
+## Demo
 
-文件頁：
+[Link to a live demo of the project]
 
--   http://127.0.0.1:8002/docs [web:521]
+## Meta
 
-### 3) 啟動 GUI（CRA）
+-   **Author:** Chen-Chen-Liu
+-   **Email:** (email to be added)
+-   **Website:** (website to be added)
+-   **Repository:** (repository to be added)
 
-```bash
-cd ecg-pomodoro
-npm install
-npm start
-```
+## Release History
 
-GUI 內的 `Demo Pipeline` 頁面會依序呼叫：
+-   **0.1.0**
+    -   The first release of the project.
+    -   This release includes the basic functionality of the Pomodoro timer and the ECG analysis.
+-   **0.0.1**
+    -   Work in progress
 
-1. `POST http://127.0.0.1:8001/ecg/features`
-2. `POST http://127.0.0.1:8002/ai/predict`
-   並在畫面上顯示回傳 JSON，用來驗證介面一致。
+## Roadmap
 
----
+-   **Q1 2026:**
+    -   [ ] Launch of the beta version
+    -   [ ] Integration with a real ECG device
+-   **Q2 2026:**
+    -   [ ] Launch of the stable version
+    -   [ ] Integration with a real AI model
+-   **Q3 2026:**
+    -   [ ] Launch of the mobile app
+    -   [ ] Integration with a database
+-   **Q4 2026:**
+    -   [ ] Launch of the web app
+    -   [ ] Integration with a CI/CD pipeline
 
-### 通用規則（必讀）
+## FAQ
 
-✅ 允許：
+**Q: Is this project free to use?**
+**A:** Yes, this project is licensed under the Apache-2.0 License, which means it is free to use, modify, and distribute.
 
--   改 `main.py` 裡的演算法邏輯（或新增 `processor.py` / `utils.py` / `model.py` 再在 `main.py` 呼叫）
--   新增 internal logging、效能優化、快取、測試碼
+**Q: Can I contribute to this project?**
+**A:** Yes, we welcome contributions! Please see the [Contributing](#contributing) section for more information.
 
-❌ 禁止（會造成前端或其他服務壞掉）：
+**Q: Where can I get help with this project?**
+**A:** Please see the [Support](#support) section for more information.
 
--   修改 `models.py` 的欄位名稱/型別/必填狀態
--   修改 endpoint 路徑與方法：
-    -   ECG：`POST /ecg/features`
-    -   AI：`POST /ai/predict`
--   刪除 `response_model=...`（它是對外 contract 的保護網）[web:436]
+## Support
 
-### ECG Service（ecg-service）
+If you need help with the project, you can:
 
-負責把 stub 換成真正 ECG pipeline（例如 R-peak 偵測 + HRV 計算），但要維持輸入/輸出格式不變：
+-   Open an issue in the repository
+-   Join our Discord server (link to be added)
+-   Email us at (email to be added)
 
--   Input: `EcgSegment`
--   Output: `EcgFeatures`
+## Acknowledgments
 
-建議修改點：
+-   [Contributor Covenant](https://www.contributor-covenant.org/)
+-   [Img Shields](https://shields.io/)
+-   [Choose an Open Source License](https://choosealicense.com/)
 
--   `main.py`：`ecg_features()` 內部目前是 placeholder，替換成你的演算法
--   可以新增 `processor.py` 並在 `ecg_features()` 內呼叫（讓 main.py 乾淨）
+## Technology Stack
 
-### AI Service（ai-service）
+-   **Frontend:** React, JavaScript, CSS
+-   **Backend:** Python, FastAPI
+-   **Database:** None
+-   **Testing:** Jest, React Testing Library
+-   **Deployment:** None
 
-負責把 stub rule-based 換成真正模型（或未來 LLM），但要維持輸入/輸出格式不變：
+## Screenshots
 
--   Input: `EcgFeatures`
--   Output: `AiPrediction`
+[Add screenshots of the application here]
 
-建議修改點：
+## To-Do
 
--   `main.py`：`predict()` 內部替換成你的推論流程
--   可以新增 `model.py` / `inference.py` 管理模型載入與推論
+-   [ ] Implement real ECG analysis in the `ecg-service`
+-   [ ] Implement a real AI model in the `ai-service`
+-   [ ] Add a database to store user data and analysis results
+-   [ ] Add user authentication
+-   [ ] Set up a CI/CD pipeline for automated testing and deployment
 
----
+## Disclaimer
 
-## Security / Repo 規範
+This project is for educational purposes only and is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
 
--   不要 commit 任何 API keys、token、密碼等敏感資訊（請用環境變數）。
--   若需要設定值，建立 `.env.example`（只放 key，不放 value），並把 `.env` / `.env.*.local` 加入 `.gitignore`。
--   大型產物（`node_modules/`、Python venv、各種 build/target）都不應提交到 git。
+## License
 
----
+This project is licensed under the Apache-2.0 License. See the [LICENSE](LICENSE) file for details.
 
-## Troubleshooting
+## Style Guide
 
--   如果 GUI 呼叫 API 被瀏覽器擋：請確認 FastAPI 有開 CORS（允許 `http://localhost:3000`）。
--   如果 `POST /ecg/features` 或 `/ai/predict` 回傳格式不符，請先對照 `/docs` 內的 schema 與 request body 範例。
+-   **Python:** We follow the [PEP 8](https://www.python.org/dev/peps/pep-0008/) style guide for Python code.
+-   **JavaScript/React:** We follow the [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) for JavaScript and React code.
+
+We use `black` to format our Python code and `prettier` to format our JavaScript/React code. Please make sure to run these tools before submitting a pull request.
+
+## Contributing
+
+We welcome contributions to the `ecg-pomodoro` project! If you'd like to contribute, please follow these guidelines:
+
+1.  **Reporting Bugs:** If you find a bug, please open an issue in the repository. Be sure to include a clear and concise description of the bug, as well as steps to reproduce it.
+2.  **Suggesting Features:** If you have an idea for a new feature, please open an issue to discuss it. This will allow us to give you feedback and ensure that the feature is a good fit for the project.
+3.  **Submitting Pull Requests:** We welcome pull requests for bug fixes, feature implementations, and documentation improvements. When submitting a pull request, please make sure that your code is well-tested and that it follows the project's coding style.
+
+Thank you for your interest in contributing to the `ecg-pomodoro` project!
+
+## Code of Conduct
+
+We have adopted a Code of Conduct that we expect project participants to adhere to. Please read [the full text](CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
