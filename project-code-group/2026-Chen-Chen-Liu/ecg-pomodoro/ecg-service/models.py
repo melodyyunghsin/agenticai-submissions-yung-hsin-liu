@@ -33,11 +33,42 @@ class EcgSegment(BaseModel):
     )
 
 
+class BioStatus(BaseModel):
+    """Real-time biometric status."""
+    timestamp_ms: int
+    hr_bpm: float
+    hrv_sdnn_ms: float
+    signal_quality_score: float  # 0.0 to 1.0
+    is_stressed: bool
+    notes: Optional[str] = None
+
+class UserBaseline(BaseModel):
+    """User physiological baseline by time period."""
+    user_id: str
+    period_start_hour: int
+    avg_hr: float
+    avg_sdnn: float
+    last_updated: int
+
+class PomodoroSummary(BaseModel):
+    """Summary of a completed Pomodoro session."""
+    session_id: str
+    start_time: int
+    end_time: int
+    avg_hr: float
+    avg_sdnn: float
+    stress_percentage: float
+    total_samples: int
+    plot_url: Optional[str] = None
+
 class EcgFeatures(BaseModel):
     """Output payload: extracted features from ECG segment."""
-
     schema_version: Literal["ecg-feat/v1"] = "ecg-feat/v1"
     segment_id: str
+    p_wave_ms: float
+    t_wave_ms: float
+    qrs_complex_ms: float
+    rr_intervals_ms: List[float]
+    hrv_sdnn_ms: float
+    hr_bpm: float
     quality: Dict
-    rpeaks: Dict
-    hrv_time: Dict

@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+numpy
+scipy
+matplotlib
+wfdb
+pandas
